@@ -8,12 +8,12 @@ COPY handler.py ${FUNCTION_DIR}
 
 RUN pip install --target ${FUNCTION_DIR} awslambdaric
 
-FROM python:3.13-slim
+FROM dhi.io/python:3.13
 
 ARG FUNCTION_DIR
 WORKDIR ${FUNCTION_DIR}
 
 COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
 
-ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
+ENTRYPOINT [ "/opt/python/bin/python", "-m", "awslambdaric" ]
 CMD [ "handler.handler" ]
