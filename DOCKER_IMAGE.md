@@ -207,8 +207,26 @@ CMD [ "handler.handler" ]
 
 ### Vulnerability Scan Results
 
-ECR basic scanning does not support the DHI OS (`Docker Hardened Images (Debian) 13`).
-Use an external scanner (e.g., Docker Scout, Trivy, Snyk) for vulnerability assessment.
+ECR basic scanning does not support the DHI OS. Scanned via `docker scout cves dhi.io/python:3.13`:
+
+| Severity | Count |
+|----------|-------|
+| CRITICAL | 0     |
+| HIGH     | 0     |
+| MEDIUM   | 0     |
+| LOW      | 10    |
+| **Total** | **10** |
+
+All 10 LOW findings are unfixed upstream issues in 4 packages:
+
+| Package | CVE Count | Notable CVEs |
+|---------|-----------|-------------|
+| glibc 2.41-12 | 7 | CVE-2019-9192, CVE-2019-1010025, CVE-2010-4756 |
+| util-linux 2.41-5 | 1 | CVE-2022-0563 |
+| openssl 3.5.4 | 1 | CVE-2010-0928 |
+| sqlite3 3.46.1-7 | 1 | CVE-2021-45346 |
+
+48 packages indexed, 29 MB image. Zero CRITICAL, HIGH, or MEDIUM vulnerabilities.
 
 ### Notes
 
@@ -227,7 +245,7 @@ Use an external scanner (e.g., Docker Scout, Trivy, Snyk) for vulnerability asse
 |---------|-----------|------|-----------------|
 | v1 | `public.ecr.aws/lambda/python:3.12-arm64` | 183.5 MB | 12 (5 HIGH) |
 | v2 | `python:3.13-slim` | 45.0 MB | 1 (0 HIGH) |
-| v3 | `dhi.io/python:3.13` | 27.0 MB | N/A (ECR scan unsupported) |
+| v3 | `dhi.io/python:3.13` | 27.0 MB | 10 (0 HIGH, 10 LOW) |
 
 **Note:** Stack destroyed and ECR repository (`cdk-hnb659fds-container-assets-<ACCOUNT_ID>-us-east-1`) manually cleaned up on 2026-02-16. All images (v1, v2, v3) no longer exist in ECR.
 
