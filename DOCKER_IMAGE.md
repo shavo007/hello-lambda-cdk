@@ -251,6 +251,36 @@ All 10 LOW findings are unfixed upstream issues in 4 packages:
 
 ---
 
+## Architecture Switch Test (x86_64 → ARM64)
+
+**Date:** 2026-02-16
+
+Tested whether CDK/CloudFormation can switch a running Lambda function's architecture in-place without destroying and recreating.
+
+### Steps
+
+1. Modified `stack.py` to use `Platform.LINUX_AMD64` and `Architecture.X86_64`
+2. Deployed the stack -- Lambda created with x86_64 architecture
+3. Verified function URL returned `{"message": "Hello from Lambda on ARM64!"}` and `Architectures: ["x86_64"]`
+4. Modified `stack.py` back to `Platform.LINUX_ARM64` and `Architecture.ARM_64`
+5. Redeployed the stack -- CloudFormation updated the function in-place
+
+### Results
+
+| Phase | Architecture | Function URL | Status |
+|-------|-------------|-------------|--------|
+| Deploy 1 | x86_64 | `https://bxjb3yna3eced2pxg2hz5xzrfa0whzrg.lambda-url.us-east-1.on.aws/` | Working |
+| Deploy 2 | arm64 | Same URL (unchanged) | Working |
+
+### Findings
+
+- CloudFormation handles the architecture switch as an **in-place update** -- no resource replacement needed
+- The function URL remains the same across the architecture change -- no disruption
+- The Dockerfile did not need to change -- `dhi.io/python:3.13` is multi-arch and Docker pulls the correct variant based on the `--platform` flag
+- The DHI python path (`/opt/python/bin/python`) is the same on both x86_64 and arm64 variants
+
+---
+
 ## Verification Commands
 
 Commands to verify a deployed image and Lambda function.
