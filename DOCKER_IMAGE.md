@@ -229,6 +229,8 @@ Use an external scanner (e.g., Docker Scout, Trivy, Snyk) for vulnerability asse
 | v2 | `python:3.13-slim` | 45.0 MB | 1 (0 HIGH) |
 | v3 | `dhi.io/python:3.13` | 27.0 MB | N/A (ECR scan unsupported) |
 
+**Note:** Stack destroyed and ECR repository (`cdk-hnb659fds-container-assets-<ACCOUNT_ID>-us-east-1`) manually cleaned up on 2026-02-16. All images (v1, v2, v3) no longer exist in ECR.
+
 ---
 
 ## Verification Commands
